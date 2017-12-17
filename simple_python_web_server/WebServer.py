@@ -6,14 +6,18 @@ serverSocket = socket(AF_INET, SOCK_STREAM)  # Prepare a sever socket
 serverHost = '127.0.0.1'
 serverPort = 12000
 address = (serverHost, serverPort)
+# 先 bind
 serverSocket.bind(address)
+# 后 listen 等待
 serverSocket.listen(1)
 # Fill in end
 while True:
     # Establish the connection
     print('Ready to serve...')
+    # 有了新的访客，新建单独链接
     connectionSocket, addr = serverSocket.accept()  # tcp 握手
     try:
+        # 接收
         message = connectionSocket.recv(1024)  # Fill in start #Fill in end
         filename = message.split()[1]
         f = open(filename[1:])
