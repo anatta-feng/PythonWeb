@@ -1,34 +1,67 @@
+#!/usr/bin/env python3
 from socket import *
+
+def _send_log(msg):
+    print('send: %s' % msg)
+
+def _reply_log(msg):
+    print('reply: %s' % msg)
 
 msg = "\r\n I love computer networks!"
 endmsg = "\r\n.\r\n"
 # Choose a mail server (e.g. Google mail server) and call it mailserver
-mailserver =  # Fill in start #Fill in end
+mailserver = 'smtp.exmail.qq.com' 
 # Create socket called clientSocket and establish a TCP connection with mailserver
 # Fill in start
 clientSocket = socket(AF_INET, SOCK_STREAM)
+clientSocket.connect((mailserver, 25))
 # Fill in end
-recv = clientSocket.recv(1024)
-print(recv)
+recv = clientSocket.recv(1024).decode()
+_reply_log(recv)
 if recv[:3] != '220':
     print('220 reply not received from server.')
 # Send HELO command and print server response.
-heloCommand = 'HELO Alice\r\n'
-clientSocket.send(heloCommand)
-recv1 = clientSocket.recv(1024)
-print(recv1)
+heloCommand = 'ehlo Alice\r\n'
+_send_log(heloCommand)
+clientSocket.send(heloCommand.encode())
+recv1 = clientSocket.recv(1024).decode()
+_reply_log(recv1)
 if recv1[:3] != '250':
     print('250 reply not received from server.')
 # Send MAIL FROM command and print server response.
 # Fill in start
+auth = 'AUTH PLAIN ADFAZnhjZGV2LmNvbQBYaWFva2VuZ2JpMTIz\r\n'
+_send_log(auth)
+clientSocket.send(auth.encode())
+recv2 = clientSocket.recv(1024).decode()
+_reply_log(recv2)
+
+from_msg = input('From:')
+from_msg = ('mail FROM:<%s> \r\n' % from_msg) 
+_send_log(from_msg)
+clientSocket.send(from_msg.encode())
+recv3 = clientSocket.recv(1024).decode()
+_reply_log(recv3)
 # Fill in end
 # Send RCPT TO command and print server response.
+to = input('To:')
+to = ('rcpt To:<%s> \r\n' % to)
+_send_log(to)
+clientSocket.send(to.encode())
+recv4 = clientSocket.recv(1024).decode()
+_reply_log(recv4)
 # Fill in start
 # Fill in end
 # Send DATA command and print server response.
+data = 'data\r\n'
+_send_log(data)
+clientSocket.send(data.encode())
+recv5 = clientSocket.recv(1024).decode()
+_reply_log(recv5)
 # Fill in start
 # Fill in end
 # Send message data.
+body = input()
 # Fill in start
 # Fill in end
 # Message ends with a single period.
