@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from socket import *
+import base64
 
 def _send_log(msg):
     print('send: %s' % msg)
@@ -61,7 +62,12 @@ _reply_log(recv5)
 # Fill in start
 # Fill in end
 # Send message data.
-body = input()
+body = input('Body: ')
+_send_log(body)
+clientSocket.send(base64.b64encode(body.encode()))
+clientSocket.send('\r\n.\r\n'.encode())
+recv6 = clientSocket.recv(1024).decode()
+_reply_log(recv6)
 # Fill in start
 # Fill in end
 # Message ends with a single period.
@@ -69,4 +75,10 @@ body = input()
 # Fill in end
 # Send QUIT command and get server response.
 # Fill in start
+bye = 'quit\r\n'
+_send_log(bye)
+clientSocket.send(bye.encode())
+recv7 = clientSocket.recv(1024).decode()
+_reply_log(recv7)
 # Fill in end
+clientSocket.close()
